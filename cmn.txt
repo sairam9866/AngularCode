@@ -1,0 +1,11 @@
+1.Multimple Browesers Protractor Test Cases Execution.
+Using multiCapabilities will run all the tests in each of the browsers. So the configuration below will run every test twice, once in Firefox and once in Chrome:
+
+multiCapabilities: [{
+  'browserName': 'chrome'
+}, {
+  'browserName': 'firefox'
+}],
+If you would rather have each test file just run once, but split up among multiple browsers, then use the splitTestsBetweenCapabilities option:
+
+splitTestsBetweenCapabilities: true

@@ -1,0 +1,7 @@
+
+WebDriver Manager Proxy Mphasis
+	
+	webdriver-manager update --ie32 --proxy http://gtpproxy.mphasis.com:8080
+
+Gitlab :  https://gitlab.prod.fedex.com/users/sign_in 
+ 

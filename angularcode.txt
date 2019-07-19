@@ -1,0 +1,186 @@
+component.css
+
+.input-group-text{
+   border-top-left-radius: 20px;
+   border-bottom-left-radius: 20px;
+}
+
+#search{
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    width: 500px;
+}
+
+.search button {
+    float: left;
+    width: 9%;
+    padding: 10px;
+    background: #5e9cd3;
+    color: white;
+    font-size: 17px;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+  }
+.btn-filters{
+    -webkit-box-shadow: 6px 4px 5px 0px  rgba(0,0,0,0.55);
+    -moz-box-shadow: 6px 4px 5px 0px  rgba(0,0,0,0.55);
+    box-shadow: 6px 4px 5px 0px  rgba(0,0,0,0.55);
+    border: 2px solid  #000000;
+    color:  #000000;
+}
+
+::ng-deep .nav-pills .nav-link.active, 
+::ng-deep .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #5e9cd3;
+}
+
+.tab {
+    overflow: hidden;
+    border: 2px solid  #000000;
+    border-top: 1px solid  #000000;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    
+  }
+
+component.html
+<div class="container my-5">
+   <div class="row">
+      <div class="col-12 col_div">
+         <ngb-tabset type="pills">
+            <ngb-tab title="Zip To Dest Current">
+               <ng-template ngbTabContent>
+                  <div class="row p-20 tab">
+                     <div class="col-12">
+                        <div class="d-flex bd-highlight mb-3">
+                           <div class="mr-auto p-2 bd-highlight">
+                              <div class="input-group mb-3">
+                                 <div class="input-group-prepend search">
+                                    <button type="submit"><i class="fa fa-search"></i></button>
+                                    <input type="text" placeholder="Filter by Network, Country, Destination, Zip, State..." id="search" (keyup)="quickSearch()" [(ngModel)] = "searchValue">
+                                    
+                                 </div>
+                                
+                              </div>
+                           </div>
+                           <div class="p-2">
+                              <button type="button" class="btn btn-md btn-filters btn btn-primary active">Modify</button>
+                           </div>
+                           <div class="p-2">
+                              <button type="button" class="btn btn-md btn-filters btn btn-info active">Add</button>
+                           </div>
+                           <div class="p-2">
+                              <button type="button" class="btn btn-md btn-filters btn btn-danger active">Delete</button>
+                           </div>
+                           <div class="p-2">
+                              <button type="button" class="btn btn-md btn-filters btn btn-secondary active">Export Data to CSV</button>
+                           </div>
+                        </div>
+                        <ag-grid-angular 
+                           style="width: 1100px; height: 500px;" 
+                           class="ag-theme-blue"
+                           [rowData]="rowData"
+                           [columnDefs]="columnDefs"
+                           [pagination] = "true"
+                           (gridReady)="onGridReady($event)"
+                        >
+                        </ag-grid-angular>
+                     </div>
+                  </div>
+               </ng-template>
+            </ngb-tab>
+            <ngb-tab [disabled]="true">
+               <ng-template ngbTabTitle><b>Zip To Dest History</b></ng-template>
+               <ng-template ngbTabContent>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</ng-template>
+            </ngb-tab>
+         </ngb-tabset>
+      </div>
+   </div>
+</div>
+
+specs.ts
+
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { ZiptoDestComponent } from './ziptodest.component';
+
+describe('ZiptoDestComponent', () => {
+  let component: ZiptoDestComponent;
+  let fixture: ComponentFixture<ZiptoDestComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ ZiptoDestComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ZiptoDestComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+
+component.ts
+import { Component, OnInit } from '@angular/core';
+import { ZiptodestService } from '../service/ziptodest.service';
+import { ZipToDest } from '../domain/ziptodest';
+import { Observable } from "rxjs";
+
+
+@Component({
+  selector: 'app-zipto-dest',
+  templateUrl: './ziptodest.component.html',
+  styleUrls: ['./ziptodest.component.css']
+})
+export class ZiptoDestComponent implements OnInit {
+
+  private gridApi;
+  private searchValue;
+
+  columnDefs = [
+    {headerName: 'Network', field: 'network',width: 100, },
+    {headerName: 'Country code', field: 'country',width: 120 },
+    {headerName: 'Zip / Postal Code', field: 'zipcode',sortable: true,width: 150},
+    {headerName: 'State / Province', field: 'state',width: 130},
+    {headerName: 'Destination', field: 'destinationTerminal',width: 120},
+    {headerName: 'Effective Date', field: 'creationDate',width: 120},
+    {headerName: 'Created By', field: 'creationUser',width: 120},
+    {headerName: 'Creation Date', field: 'effectiveDate',width: 120},
+    {headerName: 'Processed', field: 'processed',width: 120}
+  ];
+
+    rowData: Observable<ZipToDest[]>;
+
+    constructor(private dataService:ZiptodestService) {
+
+    }
+
+    onGridReady(params) {
+      this.gridApi=params.api;
+    }  
+ 
+    ngOnInit() {
+      this.reloadData();
+    }
+
+    reloadData() {
+     this.dataService.getEmployeesList()
+     .subscribe(
+      data => this.rowData = data);
+    }
+
+    quickSearch(){
+      this.gridApi.setQuickFilter(this.searchValue);
+    }
+
+}

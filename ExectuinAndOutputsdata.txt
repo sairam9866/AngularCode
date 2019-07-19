@@ -1,0 +1,12 @@
+URL to see Output Using Swagger-http://localhost:8080/swagger-ui.html
+
+To change port Number in Application.Properties in SpringBootApp-server.port=9000
+
+To skip and run the test cases while maven build - clean install-DskipTests=true
+
+Maven Build Normal Goal - clean install
+
+To skip and run test cases - clean install -Dmaven.test.skip=true
+
+
+   

@@ -1,0 +1,5 @@
+Angular Commands
+
+Ag-Grid - npm install --save ag-grid-angular ag-grid-community 
+
+BootSrtap - npm install --save @ng-bootstrap/ng-bootstrap 
